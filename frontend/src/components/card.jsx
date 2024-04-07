@@ -5,18 +5,20 @@ import axios from 'axios';
 function Card() {
 
   const [Video , setVideo] = useState();
+ 
 
   const UploadHandeler = async() => {
 
-    if(Video)  console.log(Video.name);
+    const formData = new FormData();
+    formData.append('video', Video);
+   
 
     
     try{
       
-      const formData = new FormData();
-      formData.append('video', Video);
+      
   
-      const response = await axios.post('http://localhost:3000/backend/Upload', formData, {
+      const response = await axios.post('http://localhost:4000/backend/Upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       },
@@ -27,8 +29,9 @@ function Card() {
     }
     
   }
-    catch{
+    catch(error){
       console.log("Error in Uploading the file")
+      console.log(error)
     }
   }
   return (

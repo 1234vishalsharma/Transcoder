@@ -1,12 +1,20 @@
 import './App.css'
-import Card from './components/card'
+import FilePreview from './components/FilePreview'
+import Card from './components/card'  
+import {BrowserRouter , Route,Routes} from  'react-router-dom'
+
 
 function App() {
   return (
-    <>
-      <h2 className='text-gray-700 italic text-3xl mb-8 font-semibold'>Welcome to the Video Transcoder</h2>
-      <Card/>
-    </>
+    
+      
+      <BrowserRouter>
+         <h2> This is a header file</h2>
+         <Routes>
+            <Route path='/' element={<Card/>} />
+            <Route path='/FileSection' element={<FilePreview />} />
+         </Routes>
+      </BrowserRouter>
   )
 }
 
