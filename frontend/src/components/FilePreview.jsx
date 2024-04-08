@@ -6,34 +6,36 @@ function FilePreview() {
   const [FileData,setFileData] = useState();
   const {vid} = useParams();
 
-  const parsedresp = (data) => {
-    setFileData(data);
-    console.log(data);
-  }
+  
 
   const fetchData = async() => {
+
+    const parsedresp = (data) => {
+      setFileData(data);
+      console.log(data);
+    }
     const response = (resp) => {
       resp.json().then(parsedresp);
     }
     fetch(`http://localhost:4000/backend/filepreview/${vid}` , {
       method: "GET",
     }).then(response).catch((err)=>{
-        console.log("Error occured while fetching the data ", )
+        console.log("Error occurred while fetching the data ", err)
     })
   }
 
-  setTimeout(() => {
+  useEffect(()=>{
     fetchData();
-  }, 2000);
+  },[])
 
   return (
     <div className='w-full h-screen bg-slate-900 text-white text-center '>
         { FileData &&
         
         <div className= "text-2xl text-white">
-          {FileData.dummyname}
+          {FileData.data.dummyname}
           <br/>
-          {FileData.orignalname}
+          {FileData.data.orignalname}
         </div>
 
         }

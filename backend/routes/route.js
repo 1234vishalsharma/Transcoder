@@ -8,7 +8,7 @@ const { filepreview } = require('../controller/filepreview');
 
 
 router.post('/Upload' ,Upload);
-router.get('/fileprevire/:vid',filepreview);
+router.get('/filepreview/:vid',filepreview);
 
 
 

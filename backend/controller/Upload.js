@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const videoSchema = require('../model/VideoData')
 
+    // const direc = __dirname + "/videos/" + `${Fid}` + ".mp4";
 
 exports.Upload = async (req,res) => {
     try{
