@@ -5,14 +5,12 @@ const fileUpload = require("express-fileupload")
 const app = express();
 const db = require('./config/database');
 const path = require('path')
-
+const PORT = process.env.PORT || 3000;
 
 require('dotenv').config();
 
-app.use(cors({
-    origin: "http://localhost:5173" //
-}));
-db.connect();
+app.use(cors());
+db.dbconnect();
 app.use(fileUpload());
 app.use(express.json());
 
@@ -27,6 +25,6 @@ app.get("/",(req,res)=>{
 })
 
 
-app.listen(process.env.PORT , ()=>{
+app.listen(PORT , ()=>{
     console.log(`App is running at ${process.env.PORT}`);
 });

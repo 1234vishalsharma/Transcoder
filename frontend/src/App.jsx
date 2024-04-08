@@ -5,14 +5,11 @@ import {BrowserRouter , Route,Routes} from  'react-router-dom'
 
 
 function App() {
-  return (
-    
-      
+  return (      
       <BrowserRouter>
-         <h2> This is a header file</h2>
          <Routes>
             <Route path='/' element={<Card/>} />
-            <Route path='/FileSection' element={<FilePreview />} />
+            <Route path='/Filepreview/:vid' element={<FilePreview />} />
          </Routes>
       </BrowserRouter>
   )

@@ -1,20 +1,19 @@
 const mongoose = require('mongoose');
 
-
 const VideoData = new mongoose.Schema({
-    name: {
+    dummyname: {
         type: String,
         required: true,
     },
-    resolution: {
+    orignalname: {
         type: String,
         required: true,
     },
-    url: {
+    path: {
         type: String,
         required: true,
     }
 })
 
 
-module.exports = mongoose.model('VideoData' , VideoData);
+module.exports = mongoose.model('videoSchema' , VideoData);

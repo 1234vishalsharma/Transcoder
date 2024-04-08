@@ -1,38 +1,46 @@
-const { spawn } = require("child_process");
-const path = require("path");
-const fs = require("fs");
-const ffmpeg = require("fluent-ffmpeg");
-// const ffmpeg = require("ffmpeg")
+const mongoose = require('mongoose')
+const videoSchema = require('../model/VideoData')
 
-exports.Upload = async (req, res) => {
-  try {
-    // try block which shows the functioning of the uploading the file in backend.
-    // console.log(req.files)
-    const videoName = req.files.video;
-    console.log(videoName);
-    const Fid = Date.now();
+    // const direc = __dirname + "/videos/" + `${Fid}` + ".mp4";
 
-    const direc = __dirname + "/videos/" + `${Fid}` + ".mp4";
+exports.Upload = async (req,res) => {
+    try{
+        // try block which shows the functioning of the uploading the file in backend.
+        console.log(req.files)
+        const video = req.files.video;
+        const vid = Date.now();
+        console.log(video)
 
-    videoName.mv(direc, (err) => {
-      console.log(err);
-    });
-    
-    
+        const newpath = __dirname + '/videos/' + vid + ".mp4";
 
-    return res.status(200).json({
-      status: true,
-      message: "Video uploaded",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "Video not uploaded",
-      error: error.message,
-    });
-  }
-};
+        const orignalname = video.name;
+        console.log("name : ",orignalname, "\n vid: " ,vid); 
+        video.mv(newpath , (err)=>{
+            console.log("Error occured while putting the file " , err);
+        })
 
-function convertVideo(inputFile, outputFile) {
-  // Create the ffmpeg command
+        const UploadFileToDb = await videoSchema.create({
+            'dummyname' : vid+'.mp4',
+            'orignalname':  orignalname,
+            'path': newpath, 
+        })
+
+        if(UploadFileToDb){
+            return res.status(200).json({
+                success:true,
+                vid: vid,
+                message:"File uploaded to db successfully",
+            })
+        }
+        return res.status(500).json({
+            success: false,
+            message:"File not uploaded to db",
+        })        
+    }
+    catch( error){
+        return res.status(500).json({
+            status: false,
+            message: "Video not uploaded",
+        })
+    }
 }
