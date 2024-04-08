@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
-const videoSchema = require('../model/VideoData')
-
+const videoSchema = require('../model/VideoData');
+const cloudStorage = require('../config/localstorage');
 
 exports.Upload = async (req,res) => {
     try{
@@ -22,14 +21,25 @@ exports.Upload = async (req,res) => {
             'dummyname' : vid+'.mp4',
             'orignalname':  orignalname,
             'path': newpath, 
+            'size': (video.size/(1024*1024))
         })
 
         if(UploadFileToDb){
-            return res.status(200).json({
-                success:true,
-                vid: vid,
-                message:"File uploaded to db successfully",
-            })
+            const cloudstorageVideo = cloudStorage(newpath);
+            
+            if(cloudstorageVideo){
+                return res.status(200).json({
+                    success:true,
+                    vid: vid,
+                    videoUrl: cloudstorageVideo,
+                    message:"File uploaded to db successfully",
+                })
+            }else{
+                return res.ststus(500).json({
+                    sucess: false,
+                    msg: "cloud storage error while uploading file",
+                })
+            }
         }
         return res.status(500).json({
             success: false,

@@ -12,6 +12,10 @@ const VideoData = new mongoose.Schema({
     path: {
         type: String,
         required: true,
+    },
+    size:{
+        type: Number,
+        required: true,
     }
 })
 

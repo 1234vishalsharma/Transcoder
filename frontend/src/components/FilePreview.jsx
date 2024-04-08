@@ -1,44 +1,95 @@
-// eslint-disable-next-line no-unused-vars
-import React , {useState , useEffect} from 'react'
-import {useParams} from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 function FilePreview() {
-  const [FileData,setFileData] = useState();
-  const {vid} = useParams();
-
-  const parsedresp = (data) => {
-    setFileData(data);
-    console.log(data);
-  }
+  const [FileData, setFileData] = useState();
+  const { vid } = useParams();
 
   const response = (resp) => {
     resp.json().then(parsedresp);
-  }
-  const fetchData = async() => {
-    fetch(`http://localhost:4000/backend/filepreview/${vid}` , {
+  };
+  const fetchData = async () => {
+    const parsedresp = (data) => {
+      setFileData(data?.data);
+
+      console.log(data?.data);
+    };
+    const response = (resp) => {
+      resp.json().then(parsedresp);
+    };
+    fetch(`http://localhost:4000/backend/filepreview/${vid}`, {
       method: "GET",
-    }).then(response).catch((err)=>{
-        console.log("Error occured while fetching the data ", )
     })
-  }
+      .then(response)
+      .catch((err) => {
+        console.log("Error occurred while fetching the data ", err);
+      });
+  };
 
   useEffect(() => {
     fetchData();
   }, [vid]);
 
   return (
-    <div className='w-full h-screen bg-slate-900 text-white text-center '>
-        { FileData &&
-        
-        <div className= "text-2xl text-white">
-          {FileData.dummyname}
-          <br/>
-          {FileData.orignalname}
+    <div className="h-screen w-screen overflow-hidden">
+      <div className="grid grid-cols-2 w-full h-full bg-slate-900 text-white text-center ">
+        <div className="border-2 border-white">
+          <h2 className="text-2xl font-bold border-b-2 p-3">Inputed Video</h2>
+          <div className="h-full justify-center ">
+            <div className="flex flex-col gap-8 h-full justify-center">
+              <div>
+                <label> Video Title: {FileData?.orignalname} </label>
+              </div>
+              <div>
+                <label> Video Size: {Math.round(FileData?.size)} MB</label>
+              </div>
+              <button className="p-2 bg-green-500 border-white w-32 flex justify-center items-center rounded-lg ml-auto mr-auto">Show Video</button>
+            </div>
+          </div>
         </div>
 
-        }
+        <div className="border-2 border-white">
+          <h2 className="text-2xl font-bold border-b-2 p-3">Transcoded Video</h2>
+          <div className="flex flex-col gap-4 h-full justify-center">
+            <div className="grid grid-rows-4">
+              <div className="border-2 flex flex-col gap-4 p-4 items-center border-white">
+                <span>Video with quality 1080p</span>
+                <div className="flex gap-4 w-64 items-center">
+                <button className="p-2 border-green bg-green-600 rounded-lg">Share Video</button>
+                <button className='p-2 border-green bg-blue-600 rounded-lg'>Downlaod Video</button>
+                </div>
+              </div>
+
+              <div className="border-2 flex flex-col gap-4 p-4 items-center border-white">
+                <span>Video with quality 720p</span>
+                <div className="flex gap-4 w-64 items-center">
+                <button className="p-2 border-green bg-green-600 rounded-lg">Share Video</button>
+                <button className='p-2 border-green bg-blue-600 rounded-lg'>Downlaod Video</button>
+                </div>
+              </div>
+
+              <div className="border-2 flex flex-col gap-4 p-4 items-center border-white">
+                <span>Video with quality 480p</span>
+                <div className="flex gap-4 w-64 items-center">
+                <button className="p-2 border-green bg-green-600 rounded-lg">Share Video</button>
+                <button className='p-2 border-green bg-blue-600 rounded-lg'>Downlaod Video</button>
+                </div>
+              </div>
+
+              <div className="border-2 flex flex-col gap-4 p-4 items-center border-white">
+                <span>Video with quality 360p</span>
+                <div className="flex gap-4 w-64 items-center">
+                <button className="p-2 border-green bg-green-600 rounded-lg">Share Video</button>
+                <button className='p-2 border-green bg-blue-600 rounded-lg'>Downlaod Video</button>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default FilePreview
+export default FilePreview;

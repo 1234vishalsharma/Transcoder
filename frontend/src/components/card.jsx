@@ -26,6 +26,7 @@ function Card() {
       },
     });
     if(response.data.success){
+      console.log(response.data);
       router(`/Filepreview/${response.data.vid}`);  
       return;
     }  
