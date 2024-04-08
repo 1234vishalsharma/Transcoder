@@ -11,10 +11,10 @@ function FilePreview() {
     console.log(data);
   }
 
+  const response = (resp) => {
+    resp.json().then(parsedresp);
+  }
   const fetchData = async() => {
-    const response = (resp) => {
-      resp.json().then(parsedresp);
-    }
     fetch(`http://localhost:4000/backend/filepreview/${vid}` , {
       method: "GET",
     }).then(response).catch((err)=>{
@@ -22,9 +22,9 @@ function FilePreview() {
     })
   }
 
-  setTimeout(() => {
+  useEffect(() => {
     fetchData();
-  }, 2000);
+  }, [vid]);
 
   return (
     <div className='w-full h-screen bg-slate-900 text-white text-center '>
