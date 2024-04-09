@@ -20,8 +20,6 @@ exports.Upload = async (req,res) => {
         const videopath = __dirname + `/videos/${vid}/` + "Original.mp4"
 
 
-
-
         await video.mv(videopath , (err)=>{
             console.log("Error occured while putting the file " , err);
         })
