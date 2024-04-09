@@ -13,6 +13,7 @@ exports.Upload = async (req,res) => {
 
         const orignalname = video.name;
         console.log("name : ",orignalname, "\n vid: " ,vid); 
+
         video.mv(newpath , (err)=>{
             console.log("Error occured while putting the file " , err);
         })
@@ -25,8 +26,7 @@ exports.Upload = async (req,res) => {
         })
 
         if(UploadFileToDb){
-            const cloudstorageVideo = cloudStorage(newpath);
-            
+            const cloudstorageVideo = await cloudStorage(newpath);
             if(cloudstorageVideo){
                 return res.status(200).json({
                     success:true,
@@ -40,6 +40,7 @@ exports.Upload = async (req,res) => {
                     msg: "cloud storage error while uploading file",
                 })
             }
+           
         }
         return res.status(500).json({
             success: false,
