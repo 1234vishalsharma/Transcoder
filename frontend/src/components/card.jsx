@@ -25,7 +25,7 @@ function Card() {
         setProgress( Math.round((progressEvent.loaded / progressEvent.total)*100) + '%');
       },
     });
-    if(response.data.success){
+    if(response.data.status){
       console.log(response.data);
       router(`/Filepreview/${response.data.vid}`);  
       return;

@@ -1,13 +1,17 @@
-const cloudinary = require( 'cloudinary').v2;
+const cloudinary = require("cloudinary").v2;
 
-exports.cloudStorage = (videopath) => {
-    cloudinary.uploader.upload(videopath, function (error , result){
-      if(error){
-        console.log("error occured in local storage ", error);
-        return error;
-      }else{
-        console.log(result);
-        return result;
-      }
-    })
-}
+exports.cloudStorage = async (videopath,folder) => {
+  try {
+    console.log(videopath)
+    const optionss = {folder};
+    console.log(optionss);
+    optionss.resource_type = "video";
+    const url = await cloudinary.uploader.upload(videopath,optionss);
+
+    console.log(url);
+
+    return url.secure_url;
+  } catch (error) {
+    return false;
+  }
+};
