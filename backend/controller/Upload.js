@@ -1,5 +1,5 @@
 const videoSchema = require('../model/VideoData');
-const {cloudStorage} = require('../config/localstorage');
+const {uploadToCloudinary} = require('../config/localstorage');
 const fs = require("fs")
 
 exports.Upload = async (req,res) => {
@@ -26,8 +26,9 @@ exports.Upload = async (req,res) => {
             console.log("Error occured while putting the file " , err);
         })
 
-        const urlstored = await cloudStorage(videopath,"TranscodedVideos");
-        console.log("url stored : ", urlstored);
+        const urlstored =  await waitForUploadCompletion(videopath);
+
+        
 
         if(!urlstored){
             return res.status(403).json({
@@ -43,7 +44,7 @@ exports.Upload = async (req,res) => {
             'orignalname':  orignalname,
             'path': newpath, 
             'size': (video.size/(1024*1024)),
-             main_url : urlstored.toString()
+             main_url : urlstored.secure_url.toString()
         })
 
         
@@ -72,3 +73,16 @@ exports.Upload = async (req,res) => {
         })
     }
 }
+
+async function waitForUploadCompletion(filePath) {
+    try {
+      const result = await uploadToCloudinary(filePath,"TranscodedVideos");
+      console.log("Upload completed:", result);
+      return result;
+      // Further actions after upload completion
+    } catch (error) {
+      console.error("Upload failed:", error);
+      // Handle upload failure
+      return error;
+    }
+  }
