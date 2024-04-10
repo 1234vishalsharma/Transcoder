@@ -1,17 +1,16 @@
 const cloudinary = require("cloudinary").v2;
 
-exports.cloudStorage = async (videopath,folder) => {
-  try {
-    console.log(videopath)
-    const optionss = {folder};
-    console.log(optionss);
-    optionss.resource_type = "video";
-    const url = await cloudinary.uploader.upload(videopath,optionss);
+exports.uploadToCloudinary= async(filePath,folder) => {
 
-    console.log(url);
-
-    return url.secure_url;
-  } catch (error) {
-    return false;
-  }
-};
+   const options = {folder};
+   options.resource_type = "video"
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_large(filePath,options, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
