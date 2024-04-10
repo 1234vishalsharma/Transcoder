@@ -17,36 +17,31 @@ exports.Upload = async (req,res) => {
 
         fs.mkdirSync(newpath);
 
-        const videopath = __dirname + `/videos/${vid}/` + "Original.mp4"
+        const videopath = newpath + "/Original.mp4";
 
 
         await video.mv(videopath , (err)=>{
             console.log("Error occured while putting the file " , err);
         })
 
-        const urlstored = await cloudStorage(videopath,"TranscodedVideos");
-        console.log("url stored : ", urlstored);
-
-        if(!urlstored){
-            return res.status(403).json({
-                status: false,
-                message: "Video not uploaded to cloudinary",
-                error:error.message
-            })
-
-        }
-
-        const UploadFileToDb = await videoSchema.create({
-            'dummyname' : vid+'.mp4',
-            'orignalname':  orignalname,
-            'path': newpath, 
-            'size': (video.size/(1024*1024)),
-             main_url : urlstored.toString()
-        })
+        const url = await cloudStorage(videopath,"TranscodedVideos");
 
         
-        if(!UploadFileToDb){
+        console.log(url);
 
+        
+        
+        const UploadFileToDb = await videoSchema.create({
+            'dummyname' : vid + '.mp4',
+            'orignalname':  orignalname,
+            'path': newpath,
+            'size': (video.size/(1024*1024)),
+            main_url : url
+        })
+        
+      
+        
+        if(!UploadFileToDb){
             return res.status(402).json({
                 status: false,
                 message: "Not uploaded to DB",
@@ -57,7 +52,7 @@ exports.Upload = async (req,res) => {
         return res.status(200).json({
             status: true,
             message: "Vide Uploaded to Browser",
-            url : urlstored,
+            url : url,
             vid : vid
            
         })

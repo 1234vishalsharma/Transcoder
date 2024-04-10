@@ -24,33 +24,3 @@ exports.filepreview = async(req,res) => {
 }
 
 
-exports.DownlaodFile = async(req,res) => {
-    try{
-        const {fileid , } = req.params;
-        const isFileExist = await File.findOne({fileid});
-        if(isFileExist){
-            fs.access(isFileExist.filepath, fs.constants.F_OK, (err) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(404).send('File not found');
-                }
-                
-                // Set headers to trigger a download
-                res.setHeader('Content-Disposition', `attachment; filename="${isFileExist.fileName}"`);
-                res.setHeader('Content-Type', 'application/octet-stream');
-        
-                // Stream the file to the response
-                const fileStream = fs.createReadStream(isFileExist.filepath);
-                fileStream.pipe(res);
-            });
-        }
-        
-
-    }
-    catch{
-        return res.status(404).json({
-            success: false,
-            msg: "File Not Found",
-        })
-    }
-}

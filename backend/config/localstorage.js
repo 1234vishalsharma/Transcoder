@@ -1,17 +1,18 @@
 const cloudinary = require("cloudinary").v2;
 
-exports.cloudStorage = async (videopath,folder) => {
+exports.cloudStorage = (videopath,folder) => {
   try {
-    console.log(videopath)
-    const optionss = {folder};
-    console.log(optionss);
-    optionss.resource_type = "video";
-    const url = await cloudinary.uploader.upload(videopath,optionss);
-
-    console.log(url);
-
-    return url.secure_url;
+      console.log("Video path" ,videopath)
+      const options = {folder};
+      console.log("options are: ",options);
+      options.resource_type = "video";
+      options.chunk_size = 600000000;
+      cloudinary.uploader.upload_large(videopath,options , function(result,error){
+        console.log("Result is : " ,result , "\nError is : ",error);
+        return error;
+      });      
   } catch (error) {
-    return false;
+      console.log(error);
+      return false;
   }
 };

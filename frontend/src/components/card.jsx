@@ -29,7 +29,7 @@ function Card() {
       console.log(response.data);
       router(`/Filepreview/${response.data.vid}`);  
       return;
-    }  
+    }
   }
     catch(error){
       console.log("Error in Uploading the file")
