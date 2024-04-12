@@ -26,7 +26,15 @@ exports.Upload = async (req,res) => {
 
         const urlstored =  await waitForUploadCompletion(videopath);
 
-           
+        if(!urlstored){
+            return res.status(403).json({
+                status: false,
+                message: "Video not uploaded to cloudinary",
+                error:error.message
+            })
+
+        }
+
         
         const UploadFileToDb = await videoSchema.create({
             'dummyname' : vid + '.mp4',
