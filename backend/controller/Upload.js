@@ -1,5 +1,5 @@
 const videoSchema = require('../model/VideoData');
-const {cloudStorage} = require('../config/localstorage');
+const {uploadToCloudinary} = require('../config/localstorage');
 const fs = require("fs")
 
 exports.Upload = async (req,res) => {
@@ -10,33 +10,30 @@ exports.Upload = async (req,res) => {
         const vid = Date.now();
         console.log(video)
 
-        const newpath = __dirname + `/videos/${vid}`;
+        const newpath = __dirname + `\\videos\\${vid}`;
 
         const orignalname = video.name;
-        console.log("name : ",orignalname, "\n vid: " ,vid); 
+        console.log("name : ",orignalname, "\nvid: " ,vid); 
 
         fs.mkdirSync(newpath);
 
-        const videopath = newpath + "/Original.mp4";
+        const videopath = newpath + "\\Original.mp4";
 
 
         await video.mv(videopath , (err)=>{
             console.log("Error occured while putting the file " , err);
         })
 
-        const url = await cloudStorage(videopath,"TranscodedVideos");
+        const urlstored =  await waitForUploadCompletion(videopath);
 
-        
-        console.log(url);
-
-        
+           
         
         const UploadFileToDb = await videoSchema.create({
             'dummyname' : vid + '.mp4',
             'orignalname':  orignalname,
             'path': newpath,
             'size': (video.size/(1024*1024)),
-            main_url : url
+             main_url : urlstored.secure_url.toString()
         })
         
       
@@ -52,7 +49,7 @@ exports.Upload = async (req,res) => {
         return res.status(200).json({
             status: true,
             message: "Vide Uploaded to Browser",
-            url : url,
+            url : urlstored.secure_url,
             vid : vid
            
         })
@@ -65,3 +62,16 @@ exports.Upload = async (req,res) => {
         })
     }
 }
+
+async function waitForUploadCompletion(filePath) {
+    try {
+      const result = await uploadToCloudinary(filePath,"TranscodedVideos");
+      console.log("Upload completed:", result);
+      return result;
+      // Further actions after upload completion
+    } catch (error) {
+      console.error("Upload failed:", error);
+      // Handle upload failure
+      return error;
+    }
+  }
