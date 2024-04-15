@@ -24,7 +24,7 @@ exports.filepreview = async(req,res) => {
     }
 }
 
-async function compress(file ,resol, quality, res) {
+async function compress(file ,resol, quality,res) {
     try{
             ffmpeg(file?.path + '\\Original.mp4')
             .videoCodec('libx264')
@@ -64,15 +64,16 @@ async function clientDownloadedVideo(file , videoName ,res){
                 
                 // Set headers to trigger a download
                 res.setHeader('Content-Disposition', `attachment; filename="${videoName}p.mp4"`);
-                res.setHeader('Content-Type', 'application/octet-stream');
+                 res.setHeader('Content-Type', 'application/octet-stream');
         
                 // Stream the file to the response
                 const fileStream = fs.createReadStream(`${file?.path}\\${videoName}.mp4`);
-                fileStream.pipe(res);
+                 fileStream.pipe(res);
 
                 fileStream.on('close', () => {
-                    return "Video Compressed and Downloaded Successfully";
-                });
+                 console.log("Video streamed successfully");
+                 });
+
             });
         }catch{
         console.log("Something went wrong in downloading the video");
@@ -104,16 +105,15 @@ exports.download = async(req,res) => {
         console.log("vid is: ",vid);
         console.log("quality is: ",quality);
         if(quality == 1080){
-            compress(file, "1920x1080" , quality, res);
+            await compress(file, "1920x1080", quality,res);
         }else if(quality == 720){
-            compress(file, "1280x720", quality, res);
-        }else if(quality ==  480){
-            compress(file, "640x480", quality, res);
+            await compress(file, "1280x720", quality,res);
+        }else if(quality == 480){
+            await compress(file, "640x480", quality,res);
         }else{
-            console.log("error in file downlaoding and compressing");
             return false;
         }
-        
+       
     }catch{
         return res.status(500).json({
             success: false,
