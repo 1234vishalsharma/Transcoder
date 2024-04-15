@@ -45,17 +45,17 @@ function FilePreview() {
         }),
       });
       console.log(response);
-      const blob = await response.blob();
+      // const blob = await response.blob();
       
-      // Create a temporary link element to trigger the download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "1080p.mp4";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      // // Create a temporary link element to trigger the download
+      // const url = window.URL.createObjectURL(blob);
+      // const a = document.createElement('a');
+      // a.href = url;
+      // a.download = "1080p.mp4";
+      // document.body.appendChild(a);
+      // a.click();
+      // window.URL.revokeObjectURL(url);
+      // document.body.removeChild(a);
 
     }catch (error) {
       console.error('Error downloading file:', error);
@@ -78,17 +78,17 @@ function FilePreview() {
         }),
       });
       console.log(response);
-      const blob = await response.blob();
+      // const blob = await response.blob();
       
-      // Create a temporary link element to trigger the download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "720p.mp4";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      // // Create a temporary link element to trigger the download
+      // const url = window.URL.createObjectURL(blob);
+      // const a = document.createElement('a');
+      // a.href = url;
+      // a.download = "720p.mp4";
+      // document.body.appendChild(a);
+      // a.click();
+      // window.URL.revokeObjectURL(url);
+      // document.body.removeChild(a);
 
     }catch (error) {
       console.error('Error downloading file:', error);
@@ -110,17 +110,17 @@ function FilePreview() {
         }),
       });
       console.log(response);
-      const blob = await response.blob();
+      // const blob = await response.blob();
       
-      // Create a temporary link element to trigger the download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "480p.mp4";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      // // Create a temporary link element to trigger the download
+      // const url = window.URL.createObjectURL(blob);
+      // const a = document.createElement('a');
+      // a.href = url;
+      // a.download = "480p.mp4";
+      // document.body.appendChild(a);
+      // a.click();
+      // window.URL.revokeObjectURL(url);
+      // document.body.removeChild(a);
 
     }catch (error) {
       console.error('Error downloading file:', error);

@@ -8,7 +8,6 @@ function Card() {
   const [Video , setVideo] = useState();
   const [progress , setProgress] = useState(0);
   const [bar ,setbar] = useState(false);
-  const [videoSource ,setVideoSource] = useState();
 
   const UploadHandeler = async() => {
     setbar(true);
