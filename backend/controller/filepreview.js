@@ -24,7 +24,7 @@ exports.filepreview = async(req,res) => {
     }
 }
 
-async function compress(file ,resol, quality) {
+async function compress(file ,resol, quality,res) {
     try{
         await new Promise ((resolve,reject) => {
             ffmpeg(file?.path + '\\Original.mp4')
@@ -39,7 +39,7 @@ async function compress(file ,resol, quality) {
             })
             .on('end' , function(){
                 console.log("Finished processing");
-                resolve();
+                clientDownloadedVideo(file, quality, res);
             }).save(file?.path + `\\${quality}.mp4`);
         });
         return true;
@@ -66,18 +66,16 @@ async function clientDownloadedVideo(file , videoName ,res){
                 
                 // Set headers to trigger a download
                 res.setHeader('Content-Disposition', `attachment; filename="${videoName}p.mp4"`);
-                res.setHeader('Content-Type', 'application/octet-stream');
+                 res.setHeader('Content-Type', 'application/octet-stream');
         
                 // Stream the file to the response
                 const fileStream = fs.createReadStream(`${file?.path}\\${videoName}.mp4`);
-                fileStream.pipe(res);
+                 fileStream.pipe(res);
 
                 fileStream.on('close', () => {
-                    return res.status(200).json({
-                        success: true,
-                        msg: "Video Compressed and Downloaded Successfully",
-                    });
-                });
+                 console.log("Video streamed successfully");
+                 });
+
             });
         }catch{
         console.log("Something went wrong in downloading the video");
@@ -108,26 +106,16 @@ exports.download = async(req,res) => {
         console.log("File is: ",file);
         console.log("vid is: ",vid);
         console.log("quality is: ",quality);
-        let resolution;
-        switch (quality) {
-            case 1080:
-                resolution = "1920x1080";
-                break;
-            case 720:
-                resolution = "1280x720";
-                break;
-            case 480:
-                resolution = "640x480";
-                break;
-            default:
-                return res.status(500).json({
-                    success: false,
-                    msg: "Invalid quality",
-                });
+        if(quality == 1080){
+            await compress(file, "1920x1080", quality,res);
+        }else if(quality == 720){
+            await compress(file, "1280x720", quality,res);
+        }else if(quality == 480){
+            await compress(file, "640x480", quality,res);
+        }else{
+            return false;
         }
-
-        await compress(file, resolution, quality);
-        await clientDownloadedVideo(file, quality, res);
+       
     }catch{
         return res.status(500).json({
             success: false,

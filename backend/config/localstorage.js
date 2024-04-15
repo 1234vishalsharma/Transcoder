@@ -5,7 +5,7 @@ exports.uploadToCloudinary= async(filePath,folder) => {
    const options = {folder};
    options.resource_type = "video"
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_large(filePath,options, (error, result) => {
+    cloudinary.uploader.upload(filePath,options, (error, result) => {
       if (error) {
         reject(error);
       } else {

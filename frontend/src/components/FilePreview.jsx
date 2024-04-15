@@ -6,15 +6,19 @@ function FilePreview() {
   const [FileData, setFileData] = useState();
   const [play , setplay] = useState(false);
   const { vid } = useParams();
+  const [videourl,setVideoUrl] = useState();
+  const [quality,setQuality] = useState();
+  const [path,setPath] = useState();
 
-  const response = (resp) => {
-    resp.json().then(parsedresp);
-  };
+  // const response = (resp) => {
+  //   resp.json().then(parsedresp);
+  // };
   const fetchData = async () => {
     const parsedresp = (data) => {
       setFileData(data?.data);
-
+      setVideoUrl(data?.data.main_url)
       console.log(data?.data);
+      setPath(data?.data.path);
     };
     const response = (resp) => {
       resp.json().then(parsedresp);
@@ -28,9 +32,34 @@ function FilePreview() {
       });
   };
 
+  const viewFile = async(quality) => {
+    let qualitys = quality;
+    console.log("quality is ",qualitys);
+    try {
+      // Send a request to the backend to download the file
+      const response = await fetch(`http://localhost:4000/backend/viewfile` , {
+        method: "POST",
+        headers: {
+          "content-type": 'application/json',
+        },
+        body: JSON.stringify({
+          "vid":path,
+          "quality": qualitys,
+        }),
+      });
+
+      const file = await response.json();
+
+      setVideoUrl(file?.url);
+      setFileData(file)
+
+    }catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  }
   
-  const Downlaod1080p = async() => {
-    let quality = "1080";
+  const Downlaod1080p = async(quality) => {
+   
     console.log("quality is ",quality);
     try {
       // Send a request to the backend to download the file
@@ -51,7 +80,7 @@ function FilePreview() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = "1080p.mp4";
+      a.download = `${quality}p.mp4`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -63,69 +92,7 @@ function FilePreview() {
   }
   
   
-  const Downlaod720p = async() => {
-    const quality = "720";
-    try {
-      // Send a request to the backend to download the file
-      const response = await fetch(`http://localhost:4000/backend/download` ,{
-        method: "POST",
-        headers: {
-          "content-type": 'application/json',
-        },
-        body: JSON.stringify({
-          "vid":vid,
-          "quality": quality,
-        }),
-      });
-      console.log(response);
-      const blob = await response.blob();
-      
-      // Create a temporary link element to trigger the download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "720p.mp4";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
 
-    }catch (error) {
-      console.error('Error downloading file:', error);
-    }
-  }
-
-  const Downlaod480p = async() => {
-    const quality = "480";
-    try {
-      // Send a request to the backend to download the file
-      const response = await fetch(`http://localhost:4000/backend/download`,{
-        method: "POST",
-        headers: {
-          "content-type": 'application/json',
-        },
-        body: JSON.stringify({
-          "vid":vid,
-          "quality": quality,
-        }),
-      });
-      console.log(response);
-      const blob = await response.blob();
-      
-      // Create a temporary link element to trigger the download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "480p.mp4";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-    }catch (error) {
-      console.error('Error downloading file:', error);
-    }
-  }
   
   
   
@@ -146,7 +113,7 @@ function FilePreview() {
           <div className="h-full justify-center ">
             <div className="flex flex-col gap-8 h-full justify-center">
               <div className="flex justify-center flex-col items-center gap-3">
-              <ReactPlayer url={FileData?.main_url} playing = {play} />
+              <ReactPlayer url={videourl} playing = {play} />
               
                   
               
@@ -171,7 +138,10 @@ function FilePreview() {
               <div className="border-2 flex flex-col gap-4 p-4 items-center border-white">
                 <span>Video with quality 1080p</span>
                 <div className="flex justify-center gap-4 w-64 items-center">
-                  <button onClick={Downlaod1080p} className="p-2 border-green bg-blue-600 rounded-lg">
+                  <button onClick={()=>viewFile("1080")}  className="p-2 border-green bg-green-400 rounded-lg">
+                    Show
+                 </button>
+                  <button onClick={()=>Downlaod1080p("1080")} className="p-2 border-green bg-blue-600 rounded-lg">
                     Downlaod Video 1080p
                   </button>
                 </div>
@@ -180,7 +150,11 @@ function FilePreview() {
               <div className="border-2 flex flex-col gap-4 p-4 items-center border-white">
                 <span>Video with quality 720p</span>
                 <div className="flex justify-center gap-4 w-64 items-center">
-                  <button onClick={Downlaod720p} className="p-2 border-green bg-blue-600 rounded-lg">
+
+                  <button onClick={()=>viewFile("720")}  className="p-2 border-green bg-green-400 rounded-lg">
+                    Show
+                   </button>
+                  <button onClick={()=>Downlaod1080p("720")} className="p-2 border-green bg-blue-600 rounded-lg">
                     Downlaod Video 720p
                   </button>
                 </div>
@@ -189,8 +163,11 @@ function FilePreview() {
               <div className="border-2 flex flex-col gap-4 p-4 items-center border-white">
                 <span>Video with quality 480p</span>
                 <div className="flex justify-center gap-4 w-64 items-center">
+                  <button onClick={()=>viewFile("480")} className="p-2 border-green bg-green-400 rounded-lg">
+                    Show
+                   </button>
                   
-                  <button onClick={Downlaod480p} className="p-2 border-green bg-blue-600 rounded-lg">
+                  <button onClick={()=>Downlaod1080p("480")} className="p-2 border-green bg-blue-600 rounded-lg">
                     Downlaod Video 480p
                   </button>
                 </div>
