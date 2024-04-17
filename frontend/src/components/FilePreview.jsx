@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ReactPlayer from 'react-player'
 ;
-function FilePreview() {
+const FilePreview = () => {
   const [FileData, setFileData] = useState();
   const [play , setplay] = useState(false);
   const { vid } = useParams();
   const [videourl,setVideoUrl] = useState();
-  const [quality,setQuality] = useState();
   const [path,setPath] = useState();
 
   // const response = (resp) => {
@@ -47,19 +46,12 @@ function FilePreview() {
           "quality": qualitys,
         }),
       });
-      console.log(response);
-      const blob = await response.blob();
-      
-      // Create a temporary link element to trigger the download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "1080p.mp4";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      // console.log(response);
+      const file = await response.json();
+      setVideoUrl(file?.url);
+      setFileData(file);
 
+      
     }catch (error) {
       console.error('Error downloading file:', error);
     }
@@ -81,7 +73,7 @@ function FilePreview() {
         }),
       });
       console.log(response);
-      // const blob = await response.blob();
+      const blob = await response.blob();
       
       // Create a temporary link element to trigger the download
       const url = window.URL.createObjectURL(blob);
@@ -123,13 +115,11 @@ function FilePreview() {
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-  
-  
-  
-  
-  
+      document.body.removeChild(a);  
+    }catch(e){
+      console.log("Error occured in downlaoding file ", e);
+    }
+  }
   
   useEffect(() => {
     fetchData();
@@ -211,5 +201,4 @@ function FilePreview() {
     </div>
   );
 }
-
 export default FilePreview;
