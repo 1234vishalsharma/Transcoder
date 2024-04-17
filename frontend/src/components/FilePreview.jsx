@@ -22,7 +22,7 @@ const FilePreview = () => {
     const response = (resp) => {
       resp.json().then(parsedresp);
     };
-    fetch(`http://localhost:4000/backend/filepreview/${vid}`, {
+    fetch(`https://transcoder-lwhp.onrender.com/backend/filepreview/${vid}`, {
       method: "GET",
     })
       .then(response)
@@ -36,7 +36,7 @@ const FilePreview = () => {
     console.log("quality is ",qualitys);
     try {
       // Send a request to the backend to download the file
-      const response = await fetch(`http://localhost:4000/backend/viewfile` , {
+      const response = await fetch(`https://transcoder-lwhp.onrender.com/backend/viewfile` , {
         method: "POST",
         headers: {
           "content-type": 'application/json',
@@ -62,7 +62,7 @@ const FilePreview = () => {
     console.log("quality is ",quality);
     try {
       // Send a request to the backend to download the file
-      const response = await fetch(`http://localhost:4000/backend/download` , {
+      const response = await fetch(`https://transcoder-lwhp.onrender.com/backend/download` , {
         method: "POST",
         headers: {
           "content-type": 'application/json',
@@ -94,7 +94,7 @@ const FilePreview = () => {
     const quality = "480";
     try {
       // Send a request to the backend to download the file
-      const response = await fetch(`http://localhost:4000/backend/download`,{
+      const response = await fetch(`https://transcoder-lwhp.onrender.com/backend/download`,{
         method: "POST",
         headers: {
           "content-type": 'application/json',

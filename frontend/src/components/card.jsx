@@ -17,7 +17,7 @@ function Card() {
     formData.append('video', Video);
    
     try{
-      const response = await axios.post('http://localhost:4000/backend/Upload', formData,{
+      const response = await axios.post('https://transcoder-lwhp.onrender.com/backend/Upload', formData,{
       headers: {
         'Content-Type': 'multipart/form-data'
       },
