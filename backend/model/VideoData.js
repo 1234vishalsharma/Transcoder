@@ -19,7 +19,6 @@ const VideoData = new mongoose.Schema({
     },
     main_url:{
         type:String,
-        // required:true
     }
 })
 

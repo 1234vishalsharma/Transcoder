@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import axios from 'axios';
+import toast , {Toaster} from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom';
 
 function Card() {
@@ -8,16 +9,26 @@ function Card() {
   const [Video , setVideo] = useState();
   const [progress , setProgress] = useState(0);
   const [bar ,setbar] = useState(false);
-  const [videoSource ,setVideoSource] = useState();
+  const [disable , setdisable] = useState(false);
 
   const UploadHandeler = async() => {
+    if(!Video){
+      toast.error("No Video Selected");
+      return;
+    }
+
+    const toastId = toast.loading('Uploading...');
+
+    setdisable(true);
+    setProgress(0);
     setbar(true);
     console.log(Video)
     const formData = new FormData();
     formData.append('video', Video);
    
     try{
-      const response = await axios.post('https://transcoder-lwhp.onrender.com/backend/Upload', formData,{
+      // const response = await axios.post('https://transcoder-lwhp.onrender.com/backend/Upload', formData,{
+        const response = await axios.post("http://localhost:4000/backend/Upload" , formData , {
       headers: {
         'Content-Type': 'multipart/form-data'
       },
@@ -26,19 +37,28 @@ function Card() {
       },
     });
     if(response.data.status){
+      toast.success("Video Uploaded Successfully")
+      setdisable(false);
+      toast.dismiss(toastId);
       console.log(response.data);
-      router(`/Filepreview/${response.data.vid}`);  
+      setTimeout(() => {
+        router(`/Filepreview/${response.data.vid}`);
+      }, 3000);  
       return;
     }
   }
     catch(error){
+      toast.dismiss(toastId);
+      toast.error("Failed to Upload")
       console.log("Error in Uploading the file")
       console.log(error)
+      setdisable(false);
     }
   }
   return (
     <div className="flex flex-col gap-4 w-full pt-8 items-center h-screen bg-slate-800">
-      <h1 className="text-center text-2xl text-blue-600">Put your video here</h1>
+      <Toaster/>
+      <h1 className="text-center text-2xl text-blue-600">Select a video</h1>
       <div className="h-64 w-3/4 rounded-lg overflow-hidden border-white border-2 border-dashed">
         <label>
           <div className="text-white bg-slate-500 h-full w-full flex justify-center items-center flex-col gap-3 cursor-pointer hover:bg-slate-700">
@@ -49,21 +69,24 @@ function Card() {
             className="hidden text-white gap-3"
             type="file"
             id="input_video"
-            onChange = { (event) => { setVideo(event.target.files[0]) }}
+            onChange = { (event) => {if(event.target.files[0].size < 104857600) setVideo(event.target.files[0]) }}
           />
         </label>
 
       </div>
-      {Video && <div className="text-white w-32 h-20 border-white ">
-          {Video.name}
+      {Video && <div className="text-red-700 w-32 h-20 border-white ">
+          Name: {Video.name}
           <br />
-          {Video.size}
+          Size: {Video.size}
       </div>}
 
-      <button className="text-white bg-slate-500 p-2 rounded-md border-2 border-white hover:bg-slate-700"
+      {disable ? <button disabled className={`text-white bg-slate-500 p-2 rounded-md border-2 border-white hover:bg-slate-700 ${disable ? "cursor-not-allowed":null}`}
       onClick={UploadHandeler}>
         Upload Video
-      </button>
+      </button> : <button className={`text-white bg-slate-500 p-2 rounded-md border-2 border-white hover:bg-slate-700`}
+      onClick={UploadHandeler}>
+        Upload Video
+      </button>}
 
 
       {bar && <div className='w-3/4  mt-8'>

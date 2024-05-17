@@ -41,7 +41,7 @@ exports.Upload = async (req,res) => {
             'orignalname':  orignalname,
             'path': newpath,
             'size': (video.size/(1024*1024)),
-             main_url : urlstored.secure_url.toString()
+            'main_url' : urlstored.secure_url.toString()
         })
         
       
@@ -65,12 +65,12 @@ exports.Upload = async (req,res) => {
     catch( error){
         return res.status(500).json({
             status: false,
-            message: "Video not uploaded",
+            message: "Video not uploaded backend crashed",
             error:error.message
         })
     }
 }
-
+// upload to cloudinary
 async function waitForUploadCompletion(filePath) {
     try {
       const result = await uploadToCloudinary(filePath,"TranscodedVideos");
