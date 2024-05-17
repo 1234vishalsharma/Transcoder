@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ReactPlayer from 'react-player'
-;
+import {BASE_URL} from '../env';
+
+
 const FilePreview = () => {
   const [FileData, setFileData] = useState();
   const [play , setplay] = useState(false);
@@ -9,9 +11,7 @@ const FilePreview = () => {
   const [videourl,setVideoUrl] = useState();
   const [path,setPath] = useState();
 
-  // const response = (resp) => {
-  //   resp.json().then(parsedresp);
-  // };
+
   const fetchData = async () => {
     const parsedresp = (data) => {
       setFileData(data?.data);
@@ -22,8 +22,7 @@ const FilePreview = () => {
     const response = (resp) => {
       resp.json().then(parsedresp);
     };
-    // fetch(`https://transcoder-lwhp.onrender.com/backend/filepreview/${vid}`, {
-    fetch(`http://localhost:4000/backend/filepreview/${vid}`, {
+    fetch(`${BASE_URL}backend/filepreview/${vid}`, {
       method: "GET",
     })
       .then(response)
@@ -37,8 +36,8 @@ const FilePreview = () => {
     console.log("quality is ",qualitys);
     try {
       // Send a request to the backend to download the file
-      // const response = await fetch(`https://transcoder-lwhp.onrender.com/backend/viewfile` , {
-      const response = await fetch(`http://localhost:4000/backend/viewfile` , {
+
+      const response = await fetch(`${BASE_URL}backend/viewfile` , {
         method: "POST",
         headers: {
           "content-type": 'application/json',
@@ -64,8 +63,8 @@ const FilePreview = () => {
     console.log("quality is ",quality);
     try {
       // Send a request to the backend to download the file
-      // const response = await fetch(`https://transcoder-lwhp.onrender.com/backend/download` , {
-      const response = await fetch(`http://localhost:4000/backend/download` , {
+
+      const response = await fetch(`${BASE_URL}backend/download` , {
         method: "POST",
         headers: {
           "content-type": 'application/json',
@@ -97,8 +96,8 @@ const FilePreview = () => {
     console.log("quality is ",quality);
     try {
       // Send a request to the backend to download the file
-      // const response = await fetch(`https://transcoder-lwhp.onrender.com/backend/download` , {
-      const response = await fetch(`http://localhost:4000/backend/download` , {
+
+      const response = await fetch(`${BASE_URL}backend/download` , {
         method: "POST",
         headers: {
           "content-type": 'application/json',
@@ -130,8 +129,8 @@ const FilePreview = () => {
     const quality = "480";
     try {
       // Send a request to the backend to download the file
-      // const response = await fetch(`https://transcoder-lwhp.onrender.com/backend/download`,{
-      const response = await fetch(`http://localhost:4000/backend/download`,{
+  
+      const response = await fetch(`${BASE_URL}backend/download`,{
         method: "POST",
         headers: {
           "content-type": 'application/json',

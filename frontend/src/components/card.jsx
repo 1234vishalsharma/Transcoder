@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from 'axios';
 import toast , {Toaster} from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom';
+import {BASE_URL} from '../env';
 
 function Card() {
   const router = useNavigate();
@@ -28,7 +29,7 @@ function Card() {
    
     try{
       // const response = await axios.post('https://transcoder-lwhp.onrender.com/backend/Upload', formData,{
-        const response = await axios.post("http://localhost:4000/backend/Upload" , formData , {
+        const response = await axios.post(`${BASE_URL}backend/Upload` , formData , {
       headers: {
         'Content-Type': 'multipart/form-data'
       },
@@ -58,6 +59,7 @@ function Card() {
   return (
     <div className="flex flex-col gap-4 w-full pt-8 items-center h-screen bg-slate-800">
       <Toaster/>
+
       <h1 className="text-center text-2xl text-blue-600">Select a video</h1>
       <div className="h-64 w-3/4 rounded-lg overflow-hidden border-white border-2 border-dashed">
         <label>
